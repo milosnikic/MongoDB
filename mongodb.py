@@ -89,32 +89,35 @@ def add_many(coll):
 Prikazivanje sortiranih podataka na osnovu unetih atributa
 '''
 def sort_by(coll):
-    records = []
-    attrbs = []
-    print('PRETPOSTAVLAJ SE DA KORISNIK UNOSI VALIDNE ATRIBUTE')
-    print('TJ. NE UNOSI NEPOSTOJECE ATRIBUTE')
-    print("ZA PREKID UNOSA ATRIBUTA UNESITE 'q'")
-    unos = input('Unesite zeljeni atribut: ')
-    while unos != 'q':
-        attrbs.append(unos)
+    if coll.count() == 0:
+        print('U kolekciji ne postoji ni jedan zapis!')
+    else:
+        records = []
+        attrbs = []
+        print('PRETPOSTAVLAJ SE DA KORISNIK UNOSI VALIDNE ATRIBUTE')
+        print('TJ. NE UNOSI NEPOSTOJECE ATRIBUTE')
+        print("ZA PREKID UNOSA ATRIBUTA UNESITE 'q'")
         unos = input('Unesite zeljeni atribut: ')
-    if len(attrbs) > 0:
-        for attribute in attrbs:
-            print('a) Rastuce')
-            print('b) Opadajuce')
-            pref = input('Unesite r ili o:')
-            #Za sortiranje rastuce kao drugi parametar u funkciju sort
-            #potrebno je proslediti 1, a za opadajuci redosled -1
-            if pref == 'r':
-                record = (attribute, 1)
-                records.append(record)
-            elif pref == 'o':
-                record = (attribute, -1)
-                records.append(record)
-            else:
-                print('Pogresan unos za direkciju.')
-        for item in coll.find().sort(records):
-            pprint.pprint(item)
+        while unos != 'q':
+            attrbs.append(unos)
+            unos = input('Unesite zeljeni atribut: ')
+        if len(attrbs) > 0:
+            for attribute in attrbs:
+                print('a) Rastuce')
+                print('b) Opadajuce')
+                pref = input('Unesite r ili o:')
+                #Za sortiranje rastuce kao drugi parametar u funkciju sort
+                #potrebno je proslediti 1, a za opadajuci redosled -1
+                if pref == 'r':
+                    record = (attribute, 1)
+                    records.append(record)
+                elif pref == 'o':
+                    record = (attribute, -1)
+                    records.append(record)
+                else:
+                    print('Pogresan unos za direkciju.')
+            for item in coll.find().sort(records):
+                pprint.pprint(item)
 
 
 '''
@@ -122,28 +125,41 @@ Brisanje svih zapisa iz kolekcije
 '''
 def remove_all(coll):
     #Pristupanje svakom pojedinacnom zapisu i njegovo brisanje
-    for record in coll.find():
-        coll.remove(record)
+    if coll.count() == 0:
+        print('U kolekciji ne postoji ni jedan zapis!')
+    else:
+        for record in coll.find():
+            coll.remove(record)
 
 '''
 Brisanje odredjenih zapisa iz kolekcije
 '''
 def remove(coll):
-    print('UNESITE ATRIBUTE, KAKO BISMO IZBRISALI ZAPIS')
-    record = attribute_fill(coll)
-    coll.remove(record)
+    if coll.count() == 0:
+        print('U kolekciji ne postoji ni jedan zapis!')
+    else:
+        print('UNESITE ATRIBUTE, KAKO BISMO IZBRISALI ZAPIS')
+        record = attribute_fill(coll)
+        deleted = coll.remove(record)
+        if deleted['n'] == 1:
+            print('Uneseni zapis je izbrisan.')
+        elif deleted['n'] == 0:
+            print('Zapis nije obrisan\nZapis sa unesenim atributima nije prisutan.')
 
 '''
 Pretrazivanje kolekcije na osnovu zadatih atributa
 '''
 def search(coll):
-    record = attribute_fill(coll)
-    records = coll.find(record)
-    if records.count() == 0:
-        print("Ne postoji takav zapis!")
+    if coll.count() == 0:
+        print('U kolekciji ne postoji ni jedan zapis!')
     else:
-        for item in records:
-            pprint.pprint(item)
+        record = attribute_fill(coll)
+        records = coll.find(record)
+        if records.count() == 0:
+            print("Ne postoji takav zapis!")
+        else:
+            for item in records:
+                pprint.pprint(item)
 
 '''
 Ispis glavnog menija
