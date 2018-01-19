@@ -72,7 +72,10 @@ Unosenje odredjenog rekorda sa varijabilnim brojem atributa
 '''
 def add(coll):
         record = attribute_fill(coll)
-        coll.insert_one(record)
+        if record != {}:
+            coll.insert_one(record)
+        else:
+            print('Zapis je prazan...')
 
 '''
 Unosenje vise od jednog rekorda
