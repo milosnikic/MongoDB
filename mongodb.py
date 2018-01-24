@@ -16,6 +16,11 @@
 
 from pymongo import *
 import pprint
+from bson.json_util import dumps
+import os
+
+PATH = os.getcwd()
+
 
 def collection(db):
     #Izmedju kolekcija i tabela(u relacionim bazama) moze
@@ -165,6 +170,24 @@ def search(coll):
                 pprint.pprint(item)
 
 '''
+Eksportovanje baze podataka u JSON format
+'''
+def export(coll):
+    recnik = dict()
+    file_path = PATH + '/export/db.json'
+    try:
+        os.mkdir(PATH + '/export')
+        print('Kreiran je direktorijum: ' + PATH + '/export')
+    except:
+        print('Postoji vec direktorijum export:\nPutanja: ' + PATH + '/export')
+        print()
+    finally:
+        recnik = coll.find()
+    with open(file_path,'w') as f:
+        f.write(dumps(recnik,indent=2))
+
+
+'''
 Ispis glavnog menija
 '''
 def show():
@@ -205,6 +228,7 @@ def main(con):
         print('5) Brisanje svih zapisa u kolekciji')
         print('6) Brisanje zapisa na osnovu atributa')
         print('7) Pretrazivanje na osnovu atributa')
+        print('8) Eksportovanje kolekcije u JSON format')
         print('*****q za izlaz*****')
         choice = input('Unesite zeljenu opciju: ')
         if choice == '1':
@@ -221,6 +245,8 @@ def main(con):
             remove(coll)
         elif choice == '7':
             search(coll)
+        elif choice == '8':
+            export(coll)
         elif choice in ('q','Q','quit','quit'.upper()):
             print('Hvala na koriscenju nase aplikacije!')
             return
